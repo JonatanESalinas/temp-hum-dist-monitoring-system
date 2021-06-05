@@ -1,6 +1,15 @@
 '''
+Proyecto final de Arquitectura de Computadoras.
+Interfaz de usuario para monitoreo de temperatura, humedad y nivel de agua.
+
+Carlos Mario Bielma Avendaño A01730645
+Jonatan Emanuel Salinas Ávila A01731815
+Sergio Alonso Saldaña Millán A01731958
+
+04/06/2021
+
     Para correr toda la interfaz:
-        python mainRiego.py
+        python3 mainRiego.py
     Para cambiar de .ui a .py:
         pyuic5 nombreArchivo.ui -o nombreArchivo.py
     Para generar el archivo Imag_rc.py:
@@ -91,7 +100,7 @@ GPIO.setup(pinEcho, GPIO.IN)
 bandera_detener = False
 ahora_mostrando = -1
 
-randoNum = -1
+temp = -1
 hum = -1
 lev = -1
 
@@ -102,9 +111,9 @@ lev = -1
 # Register Virtual Pin
 @blynk.VIRTUAL_READ(4)
 def my_read_handler():
-     global randoNum
-     #randoNum = random.randrange(0,10,1)
-     blynk.virtual_write(2, randoNum)
+     global temp
+     #temp = random.randrange(0,10,1)
+     blynk.virtual_write(2, temp)
      global hum
      #hum = random.randrange(20,30,1)
      blynk.virtual_write(3, hum)
@@ -138,9 +147,6 @@ class Ui_MonitoreoRiego(QtWidgets.QMainWindow,Ui_MonitoreoRiego):
         ahora_mostrando = 1
         
         self.limpiaTabla()
-        
-
-        print("xd1")
 
         hiloTemp = threading.Thread(target=self.insertaDatosTemp)
         hiloTemp.start()
@@ -152,13 +158,12 @@ class Ui_MonitoreoRiego(QtWidgets.QMainWindow,Ui_MonitoreoRiego):
         
         while(ahora_mostrando == 1 and bandera_detener == False):
             print("bandera_detener: " + str(bandera_detener))
-            #numRandom = self.obtenerMedicion('a')
             try:
                 numRandom = dhtDevice.temperature
             except RuntimeError as error:
                 numRandom = numRandom
-            global randoNum
-            randoNum = numRandom
+            global temp
+            temp = numRandom
             print(numRandom)
             text = "Temperature(C°):"
             (font_width, font_height) = font.getsize(text)
@@ -208,8 +213,6 @@ class Ui_MonitoreoRiego(QtWidgets.QMainWindow,Ui_MonitoreoRiego):
         
         self.limpiaTabla()
 
-        print("xd2")
-
         hiloHume = threading.Thread(target=self.insertaDatosHume)
         hiloHume.start()        
 
@@ -219,7 +222,6 @@ class Ui_MonitoreoRiego(QtWidgets.QMainWindow,Ui_MonitoreoRiego):
         
         while(ahora_mostrando == 2 and bandera_detener == False):
             print("bandera_detener: " + str(bandera_detener))
-            #numRandom = self.obtenerMedicion('b')
             try:
                 numRandom= dhtDevice.humidity
             except RuntimeError as error:
@@ -273,8 +275,6 @@ class Ui_MonitoreoRiego(QtWidgets.QMainWindow,Ui_MonitoreoRiego):
         
         self.limpiaTabla()
 
-        print("xd3")
-
         hiloNivel = threading.Thread(target=self.insertaDatosNivel)
         hiloNivel.start()
 
@@ -284,7 +284,6 @@ class Ui_MonitoreoRiego(QtWidgets.QMainWindow,Ui_MonitoreoRiego):
         
         while(ahora_mostrando == 3 and bandera_detener == False):
             print("bandera_detener: " + str(bandera_detener))
-            #numRandom = self.obtenerMedicion('c')
             # set Trigger to HIGH
             GPIO.output(pinTrigger, True)
             # set Trigger after 0.01ms to LOW
