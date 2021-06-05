@@ -11,9 +11,9 @@ Sergio Alonso Saldaña Millán A01731958
     Para correr toda la interfaz:
         python3 mainRiego.py
     Para cambiar de .ui a .py:
-        pyuic5 nombreArchivo.ui -o nombreArchivo.py
+        pyuic5 MonitoreoRiego.ui -o MonitoreoRiego.py
     Para generar el archivo Imag_rc.py:
-        pyrcc5 Imag.qrc -o Imag_rc.py
+        pyrcc5 Imagenes.qrc -o Imagenes_rc.py
 '''
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import *
